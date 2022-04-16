@@ -38,7 +38,13 @@ ___
 
 ### DAG (Directed Acyclic Graph)
 
-Is the core concept of Airflow. A DAG specifies the dependencies and relationships between Tasks, and the order in which to execute them and run retries; the Tasks themselves describe what to do, be it fetching data, running analysis, triggering other systems, or more.
+Is the core concept of Airflow, collecting Tasks together, organized with dependencies and relationships to say how they should run.
+
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
+</p>
+
 
 
 
