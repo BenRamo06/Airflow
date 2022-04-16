@@ -17,6 +17,7 @@ Go to localhost:8080 and login with admin user and password that previously you 
   <img src="https://github.com/BenRamo06/PySpark/blob/master/images/ems5cAs.png">
 </p> -->
 
+___
 ### Concepts
 
 Airflow is a platform that lets you build and run workflows. A workflow is represented as a DAG (a Directed Acyclic Graph), and contains individual pieces of work called Tasks, arranged with dependencies and data flows taken into account.
@@ -33,12 +34,13 @@ An Airflow installation generally consists of the following components:
 
 * **Metadata database:** used by the scheduler, executor and webserver to store state.
 
+___
 
 ### DAG (Directed Acyclic Graph)
 
 Is the core concept of Airflow. A DAG specifies the dependencies and relationships between Tasks, and the order in which to execute them and run retries; the Tasks themselves describe what to do, be it fetching data, running analysis, triggering other systems, or more.
 
-
+___
 ### Task
 
 A Task is the basic unit of execution in Airflow. Tasks are arranged into DAGs, and then have upstream and downstream dependencies set between them into order to express the order they should run in.
