@@ -40,6 +40,9 @@ ___
 
 Is the core concept of Airflow. A DAG specifies the dependencies and relationships between Tasks, and the order in which to execute them and run retries; the Tasks themselves describe what to do, be it fetching data, running analysis, triggering other systems, or more.
 
+
+
+* **_[Create DAG](https://github.com/BenRamo06/Airflow/blob/master/pipeline/01.-Create_DAG.py)_**
 ___
 ### Task
 
@@ -97,6 +100,8 @@ Airflow has a very extensive set of operators available, with some built-in to t
 * EmailOperator - sends an email
 
 
+#### Branch
+
 
 #### Cron Specifications
 
@@ -120,6 +125,10 @@ Examples:
 * 0 0 * * 0 = weekly (running at midnight on Sunday)
 * 0 0 1 * * = midnight on the first of every month
 * 45 23 * * SAT = 23:45 every Saturday
+
+
+
+
 
 
 providers GCP
