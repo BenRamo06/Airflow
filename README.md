@@ -12,10 +12,9 @@ Once installed, go to directory and open **standalone_admin_password.txt** file,
 
 Go to localhost:8080 and login with admin user and password that previously you copied.
 
-<!-- 
-<p align="center">
-  <img src="https://github.com/BenRamo06/PySpark/blob/master/images/ems5cAs.png">
-</p> -->
+We can create a **_[new users](https://github.com/BenRamo06/Airflow/blob/master/installation/create_user.bash)_** with the next roles:
+
+
 
 ___
 ### Concepts
@@ -40,6 +39,10 @@ ___
 
 Is the core concept of Airflow, collecting Tasks together, organized with dependencies and relationships to say how they should run.
 
+The DAG itself doesn't care about what is happening inside the tasks; it is merely concerned with how to execute them - the order to run them in, how many times to retry them, if they have timeouts, and so on.
+
+
+
 
 <p align="left">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
@@ -48,8 +51,28 @@ Is the core concept of Airflow, collecting Tasks together, organized with depend
 
 
 
-* **_[Create DAG](https://github.com/BenRamo06/Airflow/blob/master/pipeline/01.-Create_DAG.py)_**
+
+*   dag_id=<str> : identify of DAG *MANDATORY*
+*   description=<str> : description of DAG
+*   start_date=<datetime> : when the DAG will begin to execute *MANDATORY*
+*   end_date=<datetime> : when the DAG will finish to execute
+*   tags=<list[string[,string..]]> : assign it tags to identify more fast our DAGs in webserver
+*   catchup=<boolean>: it indicates if we can execute this DAG before of start_date (False), if is not possible "True"
+*   schedule_interval=<present|cron>: indicate periods of time where the DAG will be executed. We can us present or [cron](#CronSpecifications) like next table:
+
+preset|meaning|cron
+------|-------|----
+None|Don't schedule; use exclusively "externally triggered" DAGs.|
+@once|Schedule once and only once|
+@hourly|Run once an hour at the beginning of the hour|0 * * * *
+@daily|Run once a day at midnight|0 0 * * *
+@weekly|Run once a week at midnight on Sunday morning|0 0 * * 0
+@monthly|Run once a month at midnight on the first day of the month|0 0 1 * *
+@yearly|Run once a year at midnight of January 1|0 0 1 1 *
+
 ___
+
+
 ### Task
 
 A Task is the basic unit of execution in Airflow. Tasks are arranged into DAGs, and then have upstream and downstream dependencies set between them into order to express the order they should run in.
@@ -137,6 +160,19 @@ Examples:
 
 
 
+
+**_[Create DAG](https://github.com/BenRamo06/Airflow/blob/master/pipeline/01.-Create_DAG.py)_** *We can create a DAG wit standard constructor or context manager*
+
+**_[Create Task](https://github.com/BenRamo06/Airflow/blob/master/pipeline/02.-Create_Task.py)_** *Create a task in a DAG*
+
+**_[Task Dependencies](https://github.com/BenRamo06/Airflow/blob/master/pipeline/03.-Create_Task_Dependencies.py)_** *Create DAG with tasks dependencies*
+
+**_[Task Multiple Dependencie](https://github.com/BenRamo06/Airflow/blob/master/pipeline/04.-Create_Task_Multiple_Dependencies.py)_** *Create DAG with multiple tasks dependencies*
+
+**_[Task Branchs](https://github.com/BenRamo06/Airflow/blob/master/pipeline/05.-Branch_Process.py)_** *Create DAG with Branch defined*
+
+
 providers GCP
 
 https://github.com/apache/airflow/tree/main/airflow/providers/google/cloud/example_dags
+https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/index.html
