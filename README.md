@@ -21,9 +21,6 @@ Go to localhost:8080 and login with admin user and password that previously you 
 
 Airflow is a platform that lets you build and run workflows. A workflow is represented as a DAG (a Directed Acyclic Graph), and contains individual pieces of work called Tasks, arranged with dependencies and data flows taken into account.
 
-A DAG specifies the dependencies between Tasks, and the order in which to execute them and run retries; the Tasks themselves describe what to do, be it fetching data, running analysis, triggering other systems, or more.
-
-
 An Airflow installation generally consists of the following components:
 
 * **Scheduler:** which handles both triggering scheduled workflows, and submitting Tasks to the executor to run.
@@ -37,18 +34,49 @@ An Airflow installation generally consists of the following components:
 * **Metadata database:** used by the scheduler, executor and webserver to store state.
 
 
-### Control Flow
+### DAG (Directed Acyclic Graph)
 
-Tasks have dependencies declared on each other. You'll see this in a DAG either using the >> and << operators:
+Is the core concept of Airflow. A DAG specifies the dependencies and relationships between Tasks, and the order in which to execute them and run retries; the Tasks themselves describe what to do, be it fetching data, running analysis, triggering other systems, or more.
+
+
+### Task
+
+A Task is the basic unit of execution in Airflow. Tasks are arranged into DAGs, and then have upstream and downstream dependencies set between them into order to express the order they should run in.
+
+There are three basic kinds of Task:
+
+* Operators, predefined task templates that you can string together quickly to build most parts of your DAGs.
+
+* Sensors, a special subclass of Operators which are entirely about waiting for an external event to happen.
+
+* A TaskFlow-decorated @task, which is a custom Python function packaged up as a Task.
+
+
+##### Dependencies/ Control Flow
+
+A Task/Operator does not usually live alone; it has dependencies on other tasks (those upstream of it), and other tasks depend on it (those downstream of it. Declaring these dependencies between tasks is what makes up the DAG structure (the edges of the directed acyclic graph).
+
+There are two main ways to declare individual task dependencies. 
+
+ The recommended one is to use the >> and << operators:
 
 ```python
 first_task >> [second_task, third_task]
 fourth_task << third_task
 ```
 
-Or, with the set_upstream and set_downstream methods:
+Or, you can also use the more explicit set_upstream and set_downstream methods:
 
 ```python
 first_task.set_downstream([second_task, third_task])
 fourth_task.set_upstream(third_task)
 ```
+
+
+
+
+
+
+providers GCP
+
+https://github.com/apache/airflow/tree/main/airflow/providers/google/cloud/example_dags
