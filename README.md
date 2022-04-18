@@ -14,10 +14,7 @@ Go to localhost:8080 and login with admin user and password that previously you 
 
 We can create a **_[new users](https://github.com/BenRamo06/Airflow/blob/master/installation/create_user.bash)_** with the next roles:
 
-
-
-___
-### Concepts
+### Concepts and Architecture
 
 Airflow is a platform that lets you build and run workflows. A workflow is represented as a DAG (a Directed Acyclic Graph), and contains individual pieces of work called Tasks, arranged with dependencies and data flows taken into account.
 
@@ -25,7 +22,7 @@ An Airflow installation generally consists of the following components:
 
 * **Scheduler:** which handles both triggering scheduled workflows, and submitting Tasks to the executor to run.
 
-* **Executor:** which handles running tasks. In the default Airflow installation, this runs everything inside the scheduler, but most production-suitable executors actually push task execution out to workers.
+* **Workers:** Pick up tasks that are scheduled for execution and execute them. As such, the workers are responsible for actually “doing the work.”
 
 * **Webserver:** which presents a handy user interface to inspect, trigger and debug the behaviour of DAGs and tasks.
 
@@ -33,32 +30,30 @@ An Airflow installation generally consists of the following components:
 
 * **Metadata database:** used by the scheduler, executor and webserver to store state.
 
-___
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
+</p>
+
 
 ### DAG (Directed Acyclic Graph)
 
-Is the core concept of Airflow, collecting Tasks together, organized with dependencies and relationships to say how they should run.
+In Airflow, you define your DAGs using Python code in DAG files, which are essentially Python scripts that describe the structure of the corresponding DAG. As such,each DAG file typically describes the set of tasks for a given DAG and the dependencies between the tasks, which are then parsed by Airflow to identify the DAG structure.
 
 The DAG itself doesn't care about what is happening inside the tasks; it is merely concerned with how to execute them - the order to run them in, how many times to retry them, if they have timeouts, and so on.
-
-
 
 
 <p align="left">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
 </p>
 
-
-
-
-
-*   dag_id=<str> : identify of DAG *MANDATORY*
+*   dag_id=<str> : DAG indentify, it will be displayed un Airflow user interface *MANDATORY*
 *   description=<str> : description of DAG
 *   start_date=<datetime> : when the DAG will begin to execute *MANDATORY*
 *   end_date=<datetime> : when the DAG will finish to execute
 *   tags=<list[string[,string..]]> : assign it tags to identify more fast our DAGs in webserver
 *   catchup=<boolean>: it indicates if we can execute this DAG before of start_date (False), if is not possible "True"
-*   schedule_interval=<present|cron>: indicate periods of time where the DAG will be executed. We can us present or [cron](#CronSpecifications) like next table:
+*   dagrun_timeout=<timedelta>: maximum time to execute a DAG
+*   schedule_interval=<present|cron|None(manual)>: indicate periods of time where the DAG will be executed. We can use present or [cron expressions](https://crontab.guru) like next table:
 
 preset|meaning|cron
 ------|-------|----
@@ -70,7 +65,12 @@ None|Don't schedule; use exclusively "externally triggered" DAGs.|
 @monthly|Run once a month at midnight on the first day of the month|0 0 1 * *
 @yearly|Run once a year at midnight of January 1|0 0 1 1 *
 
-___
+
+*   default_args=<dict>: dict with properties for DAG
+    *   owner=<str>: name of owner (is a metadata value in webserver)
+    *   retries=<int>: number of tries if a task fail
+    *   retry_delay=<timedelta>: time(seconds,minutes,hours,days...) that task must wait to execute again
+
 
 
 ### Task
@@ -85,6 +85,10 @@ There are three basic kinds of Task:
 
 * A TaskFlow-decorated ```@task```, which is a custom Python function packaged up as a Task.
 
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/Taks.png">
+</p>
 
 #### Dependencies/ Control Flow
 
@@ -157,8 +161,34 @@ Examples:
 
 
 
+### UI
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/Login.png">
+</p>
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/Home.png">
+</p>
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/GraphView.png">
+</p>
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/GraphViewRunning.png">
+</p>
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/ThreeView.png">
+</p>
+
+<p align="left">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/GraphViewTasks.png">
+</p>
 
 
+### Codes
 
 
 **_[Create DAG](https://github.com/BenRamo06/Airflow/blob/master/pipeline/01.-Create_DAG.py)_** *We can create a DAG wit standard constructor or context manager*
