@@ -31,7 +31,7 @@ An Airflow installation generally consists of the following components:
 * **Metadata database:** used by the scheduler, executor and webserver to store state.
 
 <p align="center">
-  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/Architecture.png">
 </p>
 
 
