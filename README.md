@@ -170,14 +170,29 @@ Airflow’s default trigger rule is all_success , which states that all of a tas
 Trigger rule|Behavior|Example use case
 ------|------|------
 all_success (default)|Triggers when all parent tasks have been completed successfully|The default trigger rule for a normal workflow
-<p align="left">
-  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_succes.png">
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_success.png">
 </p>
 all_failed|Triggers when all parent tasks have failed (or have failed as a result of a failure in their parents)|Trigger error handling code in situations where you expected at least one success among a group of tasks
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_failed.png">
+</p>
 all_done|Triggers when all parents are done with their execution, regardless of their resulting state|Execute cleanup code that you want to execute when all tasks have finished (e.g., shutting down a machine or stopping a cluster)
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_done.png">
+</p>
 one_failed|Triggers as soon as at least one parent has failed; does not wait for other parent tasks to finish executing|Quickly trigger some error handling code, such as notifications or rollbacks
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/one_failed.png">
+</p>
 one_success|Triggers as soon as one parent succeeds; does not wait for other parent tasks to finish executing|Quickly trigger downstream computations/notifications as soon as one result becomes available
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/one_success.png">
+</p>
 none_failed|Triggers if no parents have failed but have either completed successfully or been skipped|Join conditional branches in Airflow DAGs, as shown in section 5.2
+<p align="center">
+  <img src="https://github.com/BenRamo06/Airflow/blob/master/images/none_failed.png">
+</p>
 none_skipped|Triggers if no parents have been skipped but have either completed successfully or failed|Trigger a task if all upstream tasks were executed, ignoring their result(s)
 dummy|Triggers regardless of the state of any upstream tasks|Testing
 
