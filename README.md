@@ -173,12 +173,14 @@ all_success (default)|Triggers when all parent tasks have been completed success
 <p align="center">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_success.png">
 </p>
+
 Trigger rule|Behavior|Example use case
 ------|------|------
 all_failed|Triggers when all parent tasks have failed (or have failed as a result of a failure in their parents)|Trigger error handling code in situations where you expected at least one success among a group of tasks
 <p align="center">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_failed.png">
 </p>
+
 Trigger rule|Behavior|Example use case
 ------|------|------
 all_done|Triggers when all parents are done with their execution, regardless of their resulting state|Execute cleanup code that you want to execute when all tasks have finished (e.g., shutting down a machine or stopping a cluster)
