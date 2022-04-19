@@ -167,9 +167,10 @@ Airflow’s default trigger rule is all_success , which states that all of a tas
 
 
 
-Trigger rule|Behavior|Example use case|image
-------|------|------|------
-all_success (default)|Triggers when all parent tasks have been completed successfully|The default trigger rule for a normal workflow|<p align="left">
+Trigger rule|Behavior|Example use case
+------|------|------
+all_success (default)|Triggers when all parent tasks have been completed successfully|The default trigger rule for a normal workflow
+<p align="left">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/all_succes.png">
 </p>
 all_failed|Triggers when all parent tasks have failed (or have failed as a result of a failure in their parents)|Trigger error handling code in situations where you expected at least one success among a group of tasks
