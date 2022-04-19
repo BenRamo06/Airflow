@@ -298,9 +298,10 @@ yesterday_ds_nodash|ds_nodash minus one day|“20181231”
 
 **_[Task with Trigger rules](https://github.com/BenRamo06/Airflow/blob/master/pipeline/07.-Create_Task_Trigger.py)_** *Create DAG with task and trigger*
 
+**_[Task with XCom Variables](https://github.com/BenRamo06/Airflow/blob/master/pipeline/08.-XCom_Variables.py)_** *Create DAG with task and trigger*
 
 
-providers GCP
+### Providers Google Cloud Plattform
 
 https://github.com/apache/airflow/tree/main/airflow/providers/google/cloud/example_dags
 https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/index.html
