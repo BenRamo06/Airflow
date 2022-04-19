@@ -135,6 +135,9 @@ Airflow has a very extensive set of operators available, with some built-in to t
 
 #### Branch
 
+Sometimes you need a workflow to branch, or only go down a certain path based on an arbitrary condition which is typically related to something that happened in an upstream task. One way to do this is by using the BranchPythonOperator.
+
+The BranchPythonOperator is much like the PythonOperator except that it expects a python_callable that returns a task_id. The task_id returned is followed, and all of the other paths are skipped. The task_id returned by the Python function has to be referencing a task directly downstream from the BranchPythonOperator task.
 
 #### Cron Specifications
 
@@ -214,6 +217,19 @@ Trigger rule|Behavior|Example use case
 ------|------|------
 none_skipped|Triggers if no parents have been skipped but have either completed successfully or failed|Trigger a task if all upstream tasks were executed, ignoring their result(s)
 dummy|Triggers regardless of the state of any upstream tasks|Testing
+
+
+
+
+#### XCom
+
+XComs let tasks exchange messages, allowing more nuanced forms of control and shared state. The name is an abbreviation of “cross-communication”. XComs are principally defined by a key, value.
+
+XComs can be “pushed” (sent) or “pulled” (received). When a task pushes an XCom, it makes it generally available to other tasks. 
+
+Tasks call xcom_pull() to retrieve XComs, optionally applying filters based on criteria like key, source task_ids, and source dag_id. By default, xcom_pull() filters for the keys that are automatically given to XComs when they are pushed by being returned from execute functions (as opposed to XComs that are pushed manually).
+
+If xcom_pull is passed a single string for task_ids, then the most recent XCom value from that task is returned; if a list of task_ids is passed, then a corresponding list of XCom values is returned.
 
 ### UI
 
