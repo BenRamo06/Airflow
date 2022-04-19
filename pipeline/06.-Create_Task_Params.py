@@ -6,10 +6,7 @@ from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 
-def print_function(ds, **kwargs):
-    print('ds=')
-    print(ds)
-
+def print_function(**kwargs):
     print('kwargs')
     print(kwargs)
 
@@ -20,13 +17,10 @@ def print_function(ds, **kwargs):
     print(kwargs['string'])
 
 
-
-
-
-
 with DAG(dag_id='06.-Create_Task_Params',
          description= 'this is mi first dag',
-         start_date= datetime(year=2022, month=4, day=15),
+         start_date= datetime(year=2022, month=4, day=18),
+         schedule_interval=None,
          tags=['learn','globant'],
          catchup=False) as dag:
 
@@ -35,7 +29,10 @@ with DAG(dag_id='06.-Create_Task_Params',
 
          t_hello_python = PythonOperator(task_id='printHello', 
                                          python_callable=print_function, 
-                                         provide_context=True,
+                                            # In Airflow 2, the PythonOperator determines which context variables must be
+                                            # passed along to your callable by inferring these from the callable argument names.
+                                            # It is therefore not required to set provide_context=True anymore
+                                         # provide_context=True, 
                                          op_kwargs={'number': 100, 'string':'hahaha'})
 
          # We create a task with an operator (DummyOperator) 

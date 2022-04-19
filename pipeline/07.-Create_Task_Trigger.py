@@ -7,32 +7,28 @@ from datetime import datetime
 
 
 def print_function():
-    for i in range(0,3):
-        if i%2==0:
-            return 'pair'
-        else:
-            return 'inpair'
+    if datetime.today().day%2==0:
+        return 'pair'
+    else:
+        return 'inpair'
 
 
-with DAG(dag_id='05.-Branch_Process',
+with DAG(dag_id='07.-Create_Task_Trigger',
          description= 'this is mi first dag',
          start_date= datetime(year=2022, month=4, day=15),
          tags=['learn','globant'],
          catchup=False) as dag:
-
         
          t_begin = DummyOperator(task_id='begin')
 
-        # We create a  BranchPython to generate multiple outputs 
          t_num = BranchPythonOperator(task_id='numbers', python_callable=print_function)
 
-        # Our function (print function) returns two values "pair" and "inpair", those returns must be TASK_ID to generate a branch
          t_pair   = BashOperator(task_id='pair', bash_command='echo branch_pair')
          t_inpair = BashOperator(task_id='inpair', bash_command='echo branch_inpair')
 
+        #  We define the rule "none_failed_or_skipped" for us brach, because without it our "end" task won't be executed
+         t_end = DummyOperator(task_id='end',
+                               trigger_rule='none_failed_or_skipped')
 
-         t_end = DummyOperator(task_id='end')
 
-
-# We specify steps in our DAG, defined us branch 
 t_begin >> t_num >> [t_pair, t_inpair]  >> t_end 

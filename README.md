@@ -42,7 +42,7 @@ In Airflow, you define your DAGs using Python code in DAG files, which are essen
 The DAG itself doesn't care about what is happening inside the tasks; it is merely concerned with how to execute them - the order to run them in, how many times to retry them, if they have timeouts, and so on.
 
 
-<p align="left">
+<p align="center">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/DAG.png">
 </p>
 
@@ -53,7 +53,7 @@ The DAG itself doesn't care about what is happening inside the tasks; it is mere
 *   tags=<list[string[,string..]]> : assign it tags to identify more fast our DAGs in webserver
 *   catchup=<boolean>: it indicates if we can execute this DAG before of start_date (False), if is not possible "True"
 *   dagrun_timeout=<timedelta>: maximum time to execute a DAG
-*   schedule_interval=<present|cron|None(manual)>: indicate periods of time where the DAG will be executed. We can use present or [cron expressions](https://crontab.guru) like next table:
+*   schedule_interval=<present|cron|None(manual)|timedelta>: indicate periods of time where the DAG will be executed. We can use present or [cron expressions](https://crontab.guru) like next table:
 
 preset|meaning|cron
 ------|-------|----
@@ -86,7 +86,7 @@ There are three basic kinds of Task:
 * A TaskFlow-decorated ```@task```, which is a custom Python function packaged up as a Task.
 
 
-<p align="left">
+<p align="center">
   <img src="https://github.com/BenRamo06/Airflow/blob/master/images/Taks.png">
 </p>
 
@@ -160,6 +160,23 @@ Examples:
 * 45 23 * * SAT = 23:45 every Saturday
 
 
+#### Triggers
+
+Trigger rules are essentially the conditions that Airflow applies to tasks to determine whether they are ready to execute.      
+Airflow’s default trigger rule is all_success , which states that all of a task’s dependencies must have completed successfully before the task itself can be executed
+
+
+
+Trigger rule|Behavior|Example use case|image
+------|------|------|------
+all_success (default)|Triggers when all parent tasks have been completed successfully|The default trigger rule for a normal workflow|![alt text]("https://github.com/BenRamo06/Airflow/blob/master/images/all_succes.png")
+all_failed|Triggers when all parent tasks have failed (or have failed as a result of a failure in their parents)|Trigger error handling code in situations where you expected at least one success among a group of tasks
+all_done|Triggers when all parents are done with their execution, regardless of their resulting state|Execute cleanup code that you want to execute when all tasks have finished (e.g., shutting down a machine or stopping a cluster)
+one_failed|Triggers as soon as at least one parent has failed; does not wait for other parent tasks to finish executing|Quickly trigger some error handling code, such as notifications or rollbacks
+one_success|Triggers as soon as one parent succeeds; does not wait for other parent tasks to finish executing|Quickly trigger downstream computations/notifications as soon as one result becomes available
+none_failed|Triggers if no parents have failed but have either completed successfully or been skipped|Join conditional branches in Airflow DAGs, as shown in section 5.2
+none_skipped|Triggers if no parents have been skipped but have either completed successfully or failed|Trigger a task if all upstream tasks were executed, ignoring their result(s)
+dummy|Triggers regardless of the state of any upstream tasks|Testing
 
 ### UI
 
@@ -200,6 +217,50 @@ Examples:
 **_[Task Multiple Dependencie](https://github.com/BenRamo06/Airflow/blob/master/pipeline/04.-Create_Task_Multiple_Dependencies.py)_** *Create DAG with multiple tasks dependencies*
 
 **_[Task Branchs](https://github.com/BenRamo06/Airflow/blob/master/pipeline/05.-Branch_Process.py)_** *Create DAG with Branch defined*
+
+**_[Python Operator Params](https://github.com/BenRamo06/Airflow/blob/master/pipeline/06.-Create_Task_Params.py)_** *Create DAG will use Python Operator with parameters*
+
+
+All task context variables
+Key|Description|Example
+------|------|------
+conf|Provides access to Airflow configuration|airflow.configuration.AirflowConfigParser object
+dag|The current DAG object|DAG object
+dag_run|The current DagRun object|DagRun object
+ds|execution_date formatted as %Y-%m-%d|“2019-01-01”
+ds_nodash|execution_date formatted as %Y%m%d|“20190101”
+execution_date|The start datetime of the task’s interval|pendulum.datetime.DateTime object
+inlets|Shorthand for task.inlets, a feature to track input data sources for data lineage|[]
+macros|airflow.macros module| macros module
+next_ds|execution_date of the next interval (= end of current interval) formatted as %Y-%m-%d|“2019-01-02”
+next_ds_nodash|execution_date of the next interval (= end of current interval) formatted as %Y%m%d|“20190102”
+next_execution_date|The start datetime of the task’s next interval (= end of current interval)|pendulum.datetime.DateTime object
+outlets|Shorthand for task.outlets, a feature to track output data sources for data lineage| []
+params|User-provided variables to the task context|{}
+prev_ds|execution_date of the previous interval formatted as %Y-%m-%d|“2018-12-31”
+prev_ds_nodash|execution_date of the previous interval formatted as %Y%m%d|“20181231”
+prev_execution_date|The start datetime of the task’s previous interval|pendulum.datetime.DateTime object
+prev_execution_date_succes|Start datetime of the last successfully completed run of the same task (only in past)|pendulum.datetime.DateTime object
+prev_start_date_success|Date and time on which the last successful run of the same task (only inpast) was started|pendulum.datetime.DateTime object
+run_id|The DagRun’s run_id (a key typically composed of a prefix + datetime)| “manual__2019-01-01T00:00:00+00:00”
+task|The current operator|PythonOperator object
+task_instance|The current TaskInstance object|TaskInstance object
+task_instance_key_str|A unique identifier for the current TaskInstance ({dag_id}__{task_id}__{ds_nodash})|“dag_id__task_id__20190101”
+templates_dict|User-provided variables to the task context|{}
+test_mode|Whether Airflow is running in test mode (configuration property)|False
+ti|The current TaskInstance object,same as task_instance|TaskInstance object
+tomorrow_ds|ds plus one day|“2019-01-02”
+tomorrow_ds_nodash|ds_nodash plus one day|“20190102”
+ts|execution_date|formatted according to ISO8601 format|“2019-01-01T00:00:00+00:00”
+ts_nodash|execution_date formatted as %Y%m%dT%H%M%S|“20190101T000000”
+ts_nodash_with_tz|ts_nodash with time zone information|“20190101T000000+0000”
+var|Helpers objects for dealing with Airflow variables|{}
+yesterday_ds|ds minus one day|“2018-12-31”
+yesterday_ds_nodash|ds_nodash minus one day|“20181231”
+
+
+**_[Task with Trigger rules](https://github.com/BenRamo06/Airflow/blob/master/pipeline/07.-Create_Task_Trigger.py)_** *Create DAG with task and trigger*
+
 
 
 providers GCP
